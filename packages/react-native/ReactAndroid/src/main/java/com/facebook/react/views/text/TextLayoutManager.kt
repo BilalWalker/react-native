@@ -11,6 +11,7 @@ import android.content.res.AssetManager
 import android.graphics.Color
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.graphics.text.LineBreakConfig
 import android.os.Build
 import android.text.BoringLayout
 import android.text.Layout
@@ -99,6 +100,8 @@ internal object TextLayoutManager {
   const val PA_KEY_TEXT_ALIGN_VERTICAL: Int = 8
   const val PA_KEY_TEXT_WIDTH_MODE: Int = 9
   const val PA_KEY_MINIMUM_FONT_SCALE: Int = 10
+  const val PA_KEY_LINE_BREAK: Int = 11
+  const val PA_KEY_WORD_BREAK: Int = 12
 
   private val TAG: String = TextLayoutManager::class.java.simpleName
 
@@ -371,6 +374,7 @@ internal object TextLayoutManager {
         if (
             textAttributes.fontStyle != ReactConstants.UNSET ||
                 textAttributes.fontWeight != ReactConstants.UNSET ||
+                textAttributes.fontFeatureSettings != null ||
                 textAttributes.fontVariationSettings != null ||
                 textAttributes.fontFamily != null
         ) {
@@ -607,6 +611,7 @@ internal object TextLayoutManager {
         if (
             fragment.props.fontStyle != ReactConstants.UNSET ||
                 fragment.props.fontWeight != ReactConstants.UNSET ||
+                fragment.props.fontFeatureSettings != null ||
                 fragment.props.fontVariationSettings != null ||
                 fragment.props.fontFamily != null
         ) {
@@ -839,7 +844,8 @@ internal object TextLayoutManager {
     }
   }
 
-  private fun createLayout(
+  @VisibleForTesting
+  internal fun createLayout(
       text: Spannable,
       boring: BoringLayout.Metrics?,
       width: Float,
@@ -847,6 +853,8 @@ internal object TextLayoutManager {
       includeFontPadding: Boolean,
       textBreakStrategy: Int,
       hyphenationFrequency: Int,
+      lineBreakStyle: Int,
+      lineBreakWordStyle: Int,
       alignment: Layout.Alignment,
       justificationMode: Int,
       ellipsizeMode: TextUtils.TruncateAt?,
@@ -877,15 +885,29 @@ internal object TextLayoutManager {
       )
     }
 
-    val desiredWidth = ceil(Layout.getDesiredWidth(text, paint)).toInt()
-
+    // Layout.getDesiredWidth is a full measuring pass over the text, so only run it when its
+    // result can affect the layout width. It cannot when the width is EXACTLY, nor when the text
+    // was boring but did not fit: boring.width is the unwrapped width of the same text and we only
+    // get here if it exceeds floor(width), so min(desiredWidth, floor(width)) is floor(width).
     val layoutWidth =
-        when (widthYogaMeasureMode) {
-          YogaMeasureMode.EXACTLY -> ceil(width).toInt()
-          YogaMeasureMode.AT_MOST -> min(desiredWidth, floor(width).toInt())
-          else -> desiredWidth
+        when {
+          widthYogaMeasureMode == YogaMeasureMode.EXACTLY -> ceil(width).toInt()
+          widthYogaMeasureMode == YogaMeasureMode.AT_MOST && boring != null -> floor(width).toInt()
+          else -> {
+            val desiredWidth = ceil(Layout.getDesiredWidth(text, paint)).toInt()
+            if (widthYogaMeasureMode == YogaMeasureMode.AT_MOST) {
+              min(desiredWidth, floor(width).toInt())
+            } else {
+              desiredWidth
+            }
+          }
         }
-    val enableStartOverhang = widthYogaMeasureMode == YogaMeasureMode.EXACTLY
+    // Bounds-based width is limited to text with RTL characters. An EXACTLY width usually comes
+    // from an earlier advance-based AT_MOST measurement, and LTR glyph bounds that are wider than
+    // their advances (some OEM fonts) would make a single line overflow that width and ellipsize.
+    val enableStartOverhang =
+        widthYogaMeasureMode == YogaMeasureMode.EXACTLY &&
+            TextDirectionHeuristics.ANYRTL_LTR.isRtl(text, 0, text.length)
     val layout =
         buildLayout(
             text,
@@ -893,6 +915,8 @@ internal object TextLayoutManager {
             includeFontPadding,
             textBreakStrategy,
             hyphenationFrequency,
+            lineBreakStyle,
+            lineBreakWordStyle,
             alignment,
             justificationMode,
             ellipsizeMode,
@@ -900,6 +924,26 @@ internal object TextLayoutManager {
             paint,
             enableStartOverhang,
         )
+
+    // Android 15/16 leak RTL line bounds into later LTR lines, shifting the whole drawing right.
+    if (enableStartOverhang && hasMixedParagraphDirections(layout)) {
+      return buildLayout(
+          text,
+          layoutWidth,
+          includeFontPadding,
+          textBreakStrategy,
+          hyphenationFrequency,
+          lineBreakStyle,
+          lineBreakWordStyle,
+          alignment,
+          justificationMode,
+          ellipsizeMode,
+          maxNumberOfLines,
+          paint,
+          enableStartOverhang,
+          shiftDrawingOffsetForStartOverhang = false,
+      )
+    }
 
     // Layout.draw shifts negative (left-side) overhang, but RTL line starts can overflow to the
     // right. Reserve that ink inside an EXACT layout without changing the width reported to Yoga.
@@ -911,6 +955,8 @@ internal object TextLayoutManager {
             includeFontPadding,
             textBreakStrategy,
             hyphenationFrequency,
+            lineBreakStyle,
+            lineBreakWordStyle,
             alignment,
             justificationMode,
             ellipsizeMode,
@@ -939,6 +985,15 @@ internal object TextLayoutManager {
   }
 
   @VisibleForTesting
+  internal fun hasMixedParagraphDirections(layout: Layout): Boolean {
+    if (Build.VERSION.SDK_INT < VERSION_CODE_VANILLA_ICE_CREAM || layout.lineCount == 0) {
+      return false
+    }
+    val firstDirection = layout.getParagraphDirection(0)
+    return (1 until layout.lineCount).any { layout.getParagraphDirection(it) != firstDirection }
+  }
+
+  @VisibleForTesting
   internal fun getRtlRightOverhang(layout: Layout): Int {
     if (
         Build.VERSION.SDK_INT < VERSION_CODE_VANILLA_ICE_CREAM ||
@@ -961,12 +1016,15 @@ internal object TextLayoutManager {
       includeFontPadding: Boolean,
       textBreakStrategy: Int,
       hyphenationFrequency: Int,
+      lineBreakStyle: Int,
+      lineBreakWordStyle: Int,
       alignment: Layout.Alignment,
       justificationMode: Int,
       ellipsizeMode: TextUtils.TruncateAt?,
       maxNumberOfLines: Int,
       paint: TextPaint,
       enableStartOverhang: Boolean,
+      shiftDrawingOffsetForStartOverhang: Boolean = enableStartOverhang,
   ): Layout {
     val builder =
         StaticLayout.Builder.obtain(text, 0, text.length, paint, layoutWidth)
@@ -988,12 +1046,27 @@ internal object TextLayoutManager {
       builder.setUseLineSpacingFromFallbacks(true)
     }
 
+    // Leave the platform default in place unless a style was requested, so text without these props
+    // lays out exactly as before.
+    if (
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            (lineBreakStyle != LineBreakConfig.LINE_BREAK_STYLE_NONE ||
+                lineBreakWordStyle != LineBreakConfig.LINE_BREAK_WORD_STYLE_NONE)
+    ) {
+      builder.setLineBreakConfig(
+          LineBreakConfig.Builder()
+              .setLineBreakStyle(lineBreakStyle)
+              .setLineBreakWordStyle(lineBreakWordStyle)
+              .build()
+      )
+    }
+
     // Android shifts negative (left-side) start overhang itself. RTL start overhang is on the
     // right, so createLayout reserves that space in a second pass while preserving the EXACT Yoga
     // measurement returned to the caller.
     if (Build.VERSION.SDK_INT >= VERSION_CODE_VANILLA_ICE_CREAM) {
       setUseBoundsForWidth(builder, enableStartOverhang)
-      setShiftDrawingOffsetForStartOverhang(builder, enableStartOverhang)
+      setShiftDrawingOffsetForStartOverhang(builder, shiftDrawingOffsetForStartOverhang)
     }
 
     return builder.build()
@@ -1003,8 +1076,8 @@ internal object TextLayoutManager {
    * Sets attributes on the TextPaint, used for content outside the Spannable text, like for empty
    * strings, or newlines after the last trailing character
    */
-  @VisibleForTesting
-  internal fun updateTextPaint(
+  @JvmStatic
+  fun updateTextPaint(
       paint: TextPaint,
       baseTextAttributes: TextAttributeProps,
       assets: AssetManager,
@@ -1014,9 +1087,14 @@ internal object TextLayoutManager {
       paint.textSize = baseTextAttributes.fontSize.toFloat()
     }
 
+    if (baseTextAttributes.isLetterSpacingSet) {
+      paint.letterSpacing = baseTextAttributes.letterSpacing
+    }
+
     if (
         baseTextAttributes.fontStyle != ReactConstants.UNSET ||
             baseTextAttributes.fontWeight != ReactConstants.UNSET ||
+            baseTextAttributes.fontFeatureSettings != null ||
             baseTextAttributes.fontVariationSettings != null ||
             baseTextAttributes.fontFamily != null
     ) {
@@ -1041,6 +1119,9 @@ internal object TextLayoutManager {
         paint.isFakeBoldText = missingStyle and Typeface.BOLD != 0
         paint.textSkewX = if ((missingStyle and Typeface.ITALIC) != 0) -0.25f else 0f
       }
+
+      paint.isSubpixelText = true
+      paint.isLinearText = true
     } else {
       val typeface = ReactTypefaceUtils.applyFontWeightAdjustment(null, fontWeightAdjustment)
       if (typeface != null) {
@@ -1048,6 +1129,7 @@ internal object TextLayoutManager {
       }
     }
 
+    paint.fontFeatureSettings = baseTextAttributes.fontFeatureSettings
     ReactTypefaceUtils.applyFontVariationSettings(paint, baseTextAttributes.fontVariationSettings)
   }
 
@@ -1061,12 +1143,23 @@ internal object TextLayoutManager {
       fontWeightAdjustment: Int,
   ): TextPaint {
     val paint = checkNotNull(textPaintInstance.get())
-    paint.setTypeface(null)
-    paint.textSize = 12f
-    paint.isFakeBoldText = false
-    paint.textSkewX = 0f
+    resetTextPaint(paint, 12f)
     updateTextPaint(paint, baseTextAttributes, assets, fontWeightAdjustment)
     return paint
+  }
+
+  /** Clears every attribute [updateTextPaint] may set, so a reused paint starts from defaults. */
+  @JvmStatic
+  fun resetTextPaint(paint: TextPaint, textSize: Float) {
+    paint.setTypeface(null)
+    paint.textSize = textSize
+    paint.letterSpacing = 0f
+    paint.fontFeatureSettings = null
+    paint.isFakeBoldText = false
+    paint.textSkewX = 0f
+    paint.isSubpixelText = false
+    paint.isLinearText = false
+    ReactTypefaceUtils.applyFontVariationSettings(paint, null)
   }
 
   private fun newPaintWithAttributes(
@@ -1075,6 +1168,7 @@ internal object TextLayoutManager {
       fontWeightAdjustment: Int,
   ): TextPaint {
     val paint = TextPaint(TextPaint.ANTI_ALIAS_FLAG)
+    paint.density = DisplayMetricsHolder.getScreenDisplayMetrics().density
     updateTextPaint(paint, baseTextAttributes, assets, fontWeightAdjustment)
     return paint
   }
@@ -1147,6 +1241,18 @@ internal object TextLayoutManager {
         TextAttributeProps.getHyphenationFrequency(
             paragraphAttributes.getString(PA_KEY_HYPHENATION_FREQUENCY),
         )
+    val lineBreakStyle =
+        TextAttributeProps.getLineBreakStyle(
+            if (paragraphAttributes.contains(PA_KEY_LINE_BREAK))
+                paragraphAttributes.getString(PA_KEY_LINE_BREAK)
+            else null,
+        )
+    val lineBreakWordStyle =
+        TextAttributeProps.getLineBreakWordStyle(
+            if (paragraphAttributes.contains(PA_KEY_WORD_BREAK))
+                paragraphAttributes.getString(PA_KEY_WORD_BREAK)
+            else null,
+        )
     val adjustFontSizeToFit =
         if (paragraphAttributes.contains(PA_KEY_ADJUST_FONT_SIZE_TO_FIT))
             paragraphAttributes.getBoolean(PA_KEY_ADJUST_FONT_SIZE_TO_FIT)
@@ -1189,6 +1295,8 @@ internal object TextLayoutManager {
           includeFontPadding,
           textBreakStrategy,
           hyphenationFrequency,
+          lineBreakStyle,
+          lineBreakWordStyle,
           alignment,
           justificationMode,
           paint,
@@ -1204,6 +1312,8 @@ internal object TextLayoutManager {
             includeFontPadding,
             textBreakStrategy,
             hyphenationFrequency,
+            lineBreakStyle,
+            lineBreakWordStyle,
             alignment,
             justificationMode,
             ellipsizeMode,
@@ -1227,6 +1337,8 @@ internal object TextLayoutManager {
                 includeFontPadding,
                 textBreakStrategy,
                 hyphenationFrequency,
+                lineBreakStyle,
+                lineBreakWordStyle,
                 alignment,
                 justificationMode,
                 ellipsizeMode,
@@ -1333,6 +1445,9 @@ internal object TextLayoutManager {
         reactTags,
         result.textBreakStrategy,
         result.justificationMode,
+        baseTextAttributes,
+        // `result.layout.text` may be ellipsized; keep the full text for a11y.
+        sourceText = text,
     )
   }
 
@@ -1349,6 +1464,8 @@ internal object TextLayoutManager {
       includeFontPadding: Boolean,
       textBreakStrategy: Int,
       hyphenationFrequency: Int,
+      lineBreakStyle: Int,
+      lineBreakWordStyle: Int,
       alignment: Layout.Alignment,
       justificationMode: Int,
       paint: TextPaint,
@@ -1413,6 +1530,8 @@ internal object TextLayoutManager {
               includeFontPadding,
               textBreakStrategy,
               hyphenationFrequency,
+              lineBreakStyle,
+              lineBreakWordStyle,
               alignment,
               justificationMode,
               null,

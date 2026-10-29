@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<2c4c3259015438d07cc137e9288db04a>>
+ * @generated SignedSource<<56e127471f63e47798ec619e6fa56738>>
  */
 
 /**
@@ -23,7 +23,7 @@ namespace facebook::react {
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wglobal-constructors"
-std::unique_ptr<ReactNativeFeatureFlagsAccessor> accessor_;
+constinit std::unique_ptr<ReactNativeFeatureFlagsAccessor> accessor_;
 #pragma GCC diagnostic pop
 
 bool ReactNativeFeatureFlags::commonTestFlag() {
@@ -42,8 +42,16 @@ bool ReactNativeFeatureFlags::defaultTextToOverflowHidden() {
   return getAccessor().defaultTextToOverflowHidden();
 }
 
+bool ReactNativeFeatureFlags::deferTextInputTruncationIOS() {
+  return getAccessor().deferTextInputTruncationIOS();
+}
+
 bool ReactNativeFeatureFlags::disableEarlyViewCommandExecution() {
   return getAccessor().disableEarlyViewCommandExecution();
+}
+
+bool ReactNativeFeatureFlags::disableIdleEventDispatchFrameCallbackRearmAndroid() {
+  return getAccessor().disableIdleEventDispatchFrameCallbackRearmAndroid();
 }
 
 bool ReactNativeFeatureFlags::disableIdleMountItemFrameCallbackRearmAndroid() {
@@ -134,8 +142,8 @@ bool ReactNativeFeatureFlags::enableFlexboxAutoMinSizeInStrictMode() {
   return getAccessor().enableFlexboxAutoMinSizeInStrictMode();
 }
 
-bool ReactNativeFeatureFlags::enableFontScaleChangesUpdatingLayout() {
-  return getAccessor().enableFontScaleChangesUpdatingLayout();
+bool ReactNativeFeatureFlags::enableFollowUpMountItemDispatchAndroid() {
+  return getAccessor().enableFollowUpMountItemDispatchAndroid();
 }
 
 bool ReactNativeFeatureFlags::enableIOSCompressedTextFrameAdjustment() {
@@ -262,6 +270,10 @@ bool ReactNativeFeatureFlags::fixMappingOfEventPrioritiesBetweenFabricAndReact()
   return getAccessor().fixMappingOfEventPrioritiesBetweenFabricAndReact();
 }
 
+bool ReactNativeFeatureFlags::fixTextLayoutOnPixelDensityChange() {
+  return getAccessor().fixTextLayoutOnPixelDensityChange();
+}
+
 bool ReactNativeFeatureFlags::fixYogaFlexBasisFitContentInMainAxis() {
   return getAccessor().fixYogaFlexBasisFitContentInMainAxis();
 }
@@ -284,6 +296,10 @@ bool ReactNativeFeatureFlags::fuseboxScreenshotCaptureEnabled() {
 
 bool ReactNativeFeatureFlags::fuseboxWebSocketEventsEnabled() {
   return getAccessor().fuseboxWebSocketEventsEnabled();
+}
+
+bool ReactNativeFeatureFlags::keepTimersRunningWhileHostPausedAndroid() {
+  return getAccessor().keepTimersRunningWhileHostPausedAndroid();
 }
 
 bool ReactNativeFeatureFlags::optimizedAnimatedPropUpdates() {
@@ -330,6 +346,10 @@ bool ReactNativeFeatureFlags::skipActivityIdentityAssertionOnHostPause() {
   return getAccessor().skipActivityIdentityAssertionOnHostPause();
 }
 
+bool ReactNativeFeatureFlags::skipUnchangedChildrenInDifferentiator() {
+  return getAccessor().skipUnchangedChildrenInDifferentiator();
+}
+
 bool ReactNativeFeatureFlags::syncAndroidClipBoundsWithOverflow() {
   return getAccessor().syncAndroidClipBoundsWithOverflow();
 }
@@ -372,6 +392,10 @@ bool ReactNativeFeatureFlags::useTraitHiddenOnAndroid() {
 
 bool ReactNativeFeatureFlags::useTurboModuleInterop() {
   return getAccessor().useTurboModuleInterop();
+}
+
+bool ReactNativeFeatureFlags::useWindowDensityForDisplayMetricsAndroid() {
+  return getAccessor().useWindowDensityForDisplayMetricsAndroid();
 }
 
 double ReactNativeFeatureFlags::viewCullingOutsetRatio() {

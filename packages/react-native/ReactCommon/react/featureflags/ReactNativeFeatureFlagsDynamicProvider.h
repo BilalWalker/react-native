@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<419516aab11d7e44485bb29e696a75dd>>
+ * @generated SignedSource<<c42d2c9d7f17efb43ce5b8df54e6de99>>
  */
 
 /**
@@ -83,6 +83,15 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     return ReactNativeFeatureFlagsDefaults::defaultTextToOverflowHidden();
   }
 
+  bool deferTextInputTruncationIOS() override {
+    auto value = values_["deferTextInputTruncationIOS"];
+    if (!value.isNull()) {
+      return value.getBool();
+    }
+
+    return ReactNativeFeatureFlagsDefaults::deferTextInputTruncationIOS();
+  }
+
   bool disableEarlyViewCommandExecution() override {
     auto value = values_["disableEarlyViewCommandExecution"];
     if (!value.isNull()) {
@@ -90,6 +99,15 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     }
 
     return ReactNativeFeatureFlagsDefaults::disableEarlyViewCommandExecution();
+  }
+
+  bool disableIdleEventDispatchFrameCallbackRearmAndroid() override {
+    auto value = values_["disableIdleEventDispatchFrameCallbackRearmAndroid"];
+    if (!value.isNull()) {
+      return value.getBool();
+    }
+
+    return ReactNativeFeatureFlagsDefaults::disableIdleEventDispatchFrameCallbackRearmAndroid();
   }
 
   bool disableIdleMountItemFrameCallbackRearmAndroid() override {
@@ -290,13 +308,13 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     return ReactNativeFeatureFlagsDefaults::enableFlexboxAutoMinSizeInStrictMode();
   }
 
-  bool enableFontScaleChangesUpdatingLayout() override {
-    auto value = values_["enableFontScaleChangesUpdatingLayout"];
+  bool enableFollowUpMountItemDispatchAndroid() override {
+    auto value = values_["enableFollowUpMountItemDispatchAndroid"];
     if (!value.isNull()) {
       return value.getBool();
     }
 
-    return ReactNativeFeatureFlagsDefaults::enableFontScaleChangesUpdatingLayout();
+    return ReactNativeFeatureFlagsDefaults::enableFollowUpMountItemDispatchAndroid();
   }
 
   bool enableIOSCompressedTextFrameAdjustment() override {
@@ -578,6 +596,15 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     return ReactNativeFeatureFlagsDefaults::fixMappingOfEventPrioritiesBetweenFabricAndReact();
   }
 
+  bool fixTextLayoutOnPixelDensityChange() override {
+    auto value = values_["fixTextLayoutOnPixelDensityChange"];
+    if (!value.isNull()) {
+      return value.getBool();
+    }
+
+    return ReactNativeFeatureFlagsDefaults::fixTextLayoutOnPixelDensityChange();
+  }
+
   bool fixYogaFlexBasisFitContentInMainAxis() override {
     auto value = values_["fixYogaFlexBasisFitContentInMainAxis"];
     if (!value.isNull()) {
@@ -630,6 +657,15 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     }
 
     return ReactNativeFeatureFlagsDefaults::fuseboxWebSocketEventsEnabled();
+  }
+
+  bool keepTimersRunningWhileHostPausedAndroid() override {
+    auto value = values_["keepTimersRunningWhileHostPausedAndroid"];
+    if (!value.isNull()) {
+      return value.getBool();
+    }
+
+    return ReactNativeFeatureFlagsDefaults::keepTimersRunningWhileHostPausedAndroid();
   }
 
   bool optimizedAnimatedPropUpdates() override {
@@ -731,6 +767,15 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     return ReactNativeFeatureFlagsDefaults::skipActivityIdentityAssertionOnHostPause();
   }
 
+  bool skipUnchangedChildrenInDifferentiator() override {
+    auto value = values_["skipUnchangedChildrenInDifferentiator"];
+    if (!value.isNull()) {
+      return value.getBool();
+    }
+
+    return ReactNativeFeatureFlagsDefaults::skipUnchangedChildrenInDifferentiator();
+  }
+
   bool syncAndroidClipBoundsWithOverflow() override {
     auto value = values_["syncAndroidClipBoundsWithOverflow"];
     if (!value.isNull()) {
@@ -828,6 +873,15 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     }
 
     return ReactNativeFeatureFlagsDefaults::useTurboModuleInterop();
+  }
+
+  bool useWindowDensityForDisplayMetricsAndroid() override {
+    auto value = values_["useWindowDensityForDisplayMetricsAndroid"];
+    if (!value.isNull()) {
+      return value.getBool();
+    }
+
+    return ReactNativeFeatureFlagsDefaults::useWindowDensityForDisplayMetricsAndroid();
   }
 
   double viewCullingOutsetRatio() override {

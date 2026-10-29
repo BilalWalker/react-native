@@ -13,8 +13,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#include <ReactCommon/RuntimeExecutor.h>
-#include <react/renderer/core/EventBeat.h>
+#include <React/RendererCore.h>
+#include <React/RuntimeExecutor.h>
 #include <react/utils/RunLoopObserver.h>
 
 @class RCTEventBeatFlusherLayer;

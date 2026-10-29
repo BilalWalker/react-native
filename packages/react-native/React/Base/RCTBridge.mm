@@ -24,10 +24,8 @@
 #import "RCTInspectorUtils.h"
 #import "RCTJSThread.h"
 #import "RCTLog.h"
-#import "RCTModuleData.h"
 #import "RCTPausedInDebuggerOverlayController.h"
 #import "RCTPerformanceLogger.h"
-#import "RCTProfile.h"
 #import "RCTReloadCommand.h"
 #import "RCTUtils.h"
 
@@ -184,16 +182,6 @@ NSString *RCTBridgeModuleNameForClass(Class cls)
   return RCTDropReactPrefixes(name);
 }
 
-BOOL RCTTurboModuleEnabled(void)
-{
-  return YES;
-}
-
-void RCTEnableTurboModule(BOOL enabled)
-{
-  // The new Architecture is enabled by default and we are ignoring changes to the TurboModule system.
-}
-
 #ifndef RCT_REMOVE_LEGACY_MODULE_INTEROP
 static BOOL turboModuleInteropEnabled = NO;
 BOOL RCTTurboModuleInteropEnabled(void)
@@ -228,17 +216,6 @@ RCTBridgeProxyLoggingLevel RCTTurboModuleInteropBridgeProxyLogLevel(void)
 void RCTSetTurboModuleInteropBridgeProxyLogLevel(RCTBridgeProxyLoggingLevel logLevel)
 {
   bridgeProxyLoggingLevel = logLevel;
-}
-
-BOOL kDispatchAccessibilityManagerInitOntoMain = NO;
-BOOL RCTUIManagerDispatchAccessibilityManagerInitOntoMain(void)
-{
-  return kDispatchAccessibilityManagerInitOntoMain;
-}
-
-void RCTUIManagerSetDispatchAccessibilityManagerInitOntoMain(BOOL enabled)
-{
-  kDispatchAccessibilityManagerInitOntoMain = enabled;
 }
 
 @implementation RCTBridge
@@ -322,10 +299,6 @@ void RCTUIManagerSetDispatchAccessibilityManagerInitOntoMain(BOOL enabled)
 - (BOOL)isBatchActive
 {
   return NO;
-}
-
-- (void)setUp
-{
 }
 
 - (void)enqueueCallback:(NSNumber *)cbID args:(NSArray *)args

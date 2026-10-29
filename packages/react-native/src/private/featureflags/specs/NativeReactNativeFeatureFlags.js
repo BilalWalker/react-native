@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<26f30821669e81ddb8c654ea71bbaca6>>
+ * @generated SignedSource<<2eb3f4a3dca013c51ad2913944855010>>
  * @flow strict
  * @noformat
  */
@@ -29,7 +29,9 @@ export interface Spec extends TurboModule {
   readonly cdpInteractionMetricsEnabled?: () => boolean;
   readonly cxxNativeAnimatedEnabled?: () => boolean;
   readonly defaultTextToOverflowHidden?: () => boolean;
+  readonly deferTextInputTruncationIOS?: () => boolean;
   readonly disableEarlyViewCommandExecution?: () => boolean;
+  readonly disableIdleEventDispatchFrameCallbackRearmAndroid?: () => boolean;
   readonly disableIdleMountItemFrameCallbackRearmAndroid?: () => boolean;
   readonly disableImageViewPreallocationAndroid?: () => boolean;
   readonly disableMountItemReorderingAndroid?: () => boolean;
@@ -52,7 +54,7 @@ export interface Spec extends TurboModule {
   readonly enableFabricCommitBranchingMergeOnMainThread?: () => boolean;
   readonly enableFabricLogs?: () => boolean;
   readonly enableFlexboxAutoMinSizeInStrictMode?: () => boolean;
-  readonly enableFontScaleChangesUpdatingLayout?: () => boolean;
+  readonly enableFollowUpMountItemDispatchAndroid?: () => boolean;
   readonly enableIOSCompressedTextFrameAdjustment?: () => boolean;
   readonly enableIOSTextBaselineOffsetPerLine?: () => boolean;
   readonly enableIOSViewClipToPaddingBox?: () => boolean;
@@ -84,12 +86,14 @@ export interface Spec extends TurboModule {
   readonly enableVirtualViewContainerStateExperimental?: () => boolean;
   readonly fixBorderlessRippleAndroid?: () => boolean;
   readonly fixMappingOfEventPrioritiesBetweenFabricAndReact?: () => boolean;
+  readonly fixTextLayoutOnPixelDensityChange?: () => boolean;
   readonly fixYogaFlexBasisFitContentInMainAxis?: () => boolean;
   readonly fuseboxAssertSingleHostState?: () => boolean;
   readonly fuseboxEnabledRelease?: () => boolean;
   readonly fuseboxFrameRecordingEnabled?: () => boolean;
   readonly fuseboxScreenshotCaptureEnabled?: () => boolean;
   readonly fuseboxWebSocketEventsEnabled?: () => boolean;
+  readonly keepTimersRunningWhileHostPausedAndroid?: () => boolean;
   readonly optimizedAnimatedPropUpdates?: () => boolean;
   readonly overrideBySynchronousMountPropsAtMountingAndroid?: () => boolean;
   readonly perfIssuesEnabled?: () => boolean;
@@ -101,6 +105,7 @@ export interface Spec extends TurboModule {
   readonly shouldPressibilityUseW3CPointerEventsForHover?: () => boolean;
   readonly shouldTriggerResponderTransferOnScrollAndroid?: () => boolean;
   readonly skipActivityIdentityAssertionOnHostPause?: () => boolean;
+  readonly skipUnchangedChildrenInDifferentiator?: () => boolean;
   readonly syncAndroidClipBoundsWithOverflow?: () => boolean;
   readonly traceTurboModulePromiseRejectionsOnAndroid?: () => boolean;
   readonly updateRuntimeShadowNodeReferencesOnCommit?: () => boolean;
@@ -112,6 +117,7 @@ export interface Spec extends TurboModule {
   readonly useSharedAnimatedBackend?: () => boolean;
   readonly useTraitHiddenOnAndroid?: () => boolean;
   readonly useTurboModuleInterop?: () => boolean;
+  readonly useWindowDensityForDisplayMetricsAndroid?: () => boolean;
   readonly viewCullingOutsetRatio?: () => number;
   readonly viewTransitionEnabled?: () => boolean;
   readonly viewTransitionUseHardwareBitmapAndroid?: () => boolean;

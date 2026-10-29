@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<d3e3c356a52030f93512d7ec4b662fb0>>
+ * @generated SignedSource<<90f271ea47f91e6a84979209b7b3d816>>
  */
 
 /**
@@ -46,7 +46,11 @@ class NativeReactNativeFeatureFlags
 
   bool defaultTextToOverflowHidden(jsi::Runtime& runtime);
 
+  bool deferTextInputTruncationIOS(jsi::Runtime& runtime);
+
   bool disableEarlyViewCommandExecution(jsi::Runtime& runtime);
+
+  bool disableIdleEventDispatchFrameCallbackRearmAndroid(jsi::Runtime& runtime);
 
   bool disableIdleMountItemFrameCallbackRearmAndroid(jsi::Runtime& runtime);
 
@@ -92,7 +96,7 @@ class NativeReactNativeFeatureFlags
 
   bool enableFlexboxAutoMinSizeInStrictMode(jsi::Runtime& runtime);
 
-  bool enableFontScaleChangesUpdatingLayout(jsi::Runtime& runtime);
+  bool enableFollowUpMountItemDispatchAndroid(jsi::Runtime& runtime);
 
   bool enableIOSCompressedTextFrameAdjustment(jsi::Runtime& runtime);
 
@@ -156,6 +160,8 @@ class NativeReactNativeFeatureFlags
 
   bool fixMappingOfEventPrioritiesBetweenFabricAndReact(jsi::Runtime& runtime);
 
+  bool fixTextLayoutOnPixelDensityChange(jsi::Runtime& runtime);
+
   bool fixYogaFlexBasisFitContentInMainAxis(jsi::Runtime& runtime);
 
   bool fuseboxAssertSingleHostState(jsi::Runtime& runtime);
@@ -167,6 +173,8 @@ class NativeReactNativeFeatureFlags
   bool fuseboxScreenshotCaptureEnabled(jsi::Runtime& runtime);
 
   bool fuseboxWebSocketEventsEnabled(jsi::Runtime& runtime);
+
+  bool keepTimersRunningWhileHostPausedAndroid(jsi::Runtime& runtime);
 
   bool optimizedAnimatedPropUpdates(jsi::Runtime& runtime);
 
@@ -190,6 +198,8 @@ class NativeReactNativeFeatureFlags
 
   bool skipActivityIdentityAssertionOnHostPause(jsi::Runtime& runtime);
 
+  bool skipUnchangedChildrenInDifferentiator(jsi::Runtime& runtime);
+
   bool syncAndroidClipBoundsWithOverflow(jsi::Runtime& runtime);
 
   bool traceTurboModulePromiseRejectionsOnAndroid(jsi::Runtime& runtime);
@@ -211,6 +221,8 @@ class NativeReactNativeFeatureFlags
   bool useTraitHiddenOnAndroid(jsi::Runtime& runtime);
 
   bool useTurboModuleInterop(jsi::Runtime& runtime);
+
+  bool useWindowDensityForDisplayMetricsAndroid(jsi::Runtime& runtime);
 
   double viewCullingOutsetRatio(jsi::Runtime& runtime);
 

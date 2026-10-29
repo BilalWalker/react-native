@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<9ed55c4c14d640c0fb2bd6c8fb7ef557>>
+ * @generated SignedSource<<6d86d4adbc261c9271b5bed72bd12dcf>>
  */
 
 /**
@@ -36,7 +36,11 @@ public object ReactNativeFeatureFlagsCxxInterop {
 
   @DoNotStrip @JvmStatic public external fun defaultTextToOverflowHidden(): Boolean
 
+  @DoNotStrip @JvmStatic public external fun deferTextInputTruncationIOS(): Boolean
+
   @DoNotStrip @JvmStatic public external fun disableEarlyViewCommandExecution(): Boolean
+
+  @DoNotStrip @JvmStatic public external fun disableIdleEventDispatchFrameCallbackRearmAndroid(): Boolean
 
   @DoNotStrip @JvmStatic public external fun disableIdleMountItemFrameCallbackRearmAndroid(): Boolean
 
@@ -82,7 +86,7 @@ public object ReactNativeFeatureFlagsCxxInterop {
 
   @DoNotStrip @JvmStatic public external fun enableFlexboxAutoMinSizeInStrictMode(): Boolean
 
-  @DoNotStrip @JvmStatic public external fun enableFontScaleChangesUpdatingLayout(): Boolean
+  @DoNotStrip @JvmStatic public external fun enableFollowUpMountItemDispatchAndroid(): Boolean
 
   @DoNotStrip @JvmStatic public external fun enableIOSCompressedTextFrameAdjustment(): Boolean
 
@@ -146,6 +150,8 @@ public object ReactNativeFeatureFlagsCxxInterop {
 
   @DoNotStrip @JvmStatic public external fun fixMappingOfEventPrioritiesBetweenFabricAndReact(): Boolean
 
+  @DoNotStrip @JvmStatic public external fun fixTextLayoutOnPixelDensityChange(): Boolean
+
   @DoNotStrip @JvmStatic public external fun fixYogaFlexBasisFitContentInMainAxis(): Boolean
 
   @DoNotStrip @JvmStatic public external fun fuseboxAssertSingleHostState(): Boolean
@@ -157,6 +163,8 @@ public object ReactNativeFeatureFlagsCxxInterop {
   @DoNotStrip @JvmStatic public external fun fuseboxScreenshotCaptureEnabled(): Boolean
 
   @DoNotStrip @JvmStatic public external fun fuseboxWebSocketEventsEnabled(): Boolean
+
+  @DoNotStrip @JvmStatic public external fun keepTimersRunningWhileHostPausedAndroid(): Boolean
 
   @DoNotStrip @JvmStatic public external fun optimizedAnimatedPropUpdates(): Boolean
 
@@ -180,6 +188,8 @@ public object ReactNativeFeatureFlagsCxxInterop {
 
   @DoNotStrip @JvmStatic public external fun skipActivityIdentityAssertionOnHostPause(): Boolean
 
+  @DoNotStrip @JvmStatic public external fun skipUnchangedChildrenInDifferentiator(): Boolean
+
   @DoNotStrip @JvmStatic public external fun syncAndroidClipBoundsWithOverflow(): Boolean
 
   @DoNotStrip @JvmStatic public external fun traceTurboModulePromiseRejectionsOnAndroid(): Boolean
@@ -201,6 +211,8 @@ public object ReactNativeFeatureFlagsCxxInterop {
   @DoNotStrip @JvmStatic public external fun useTraitHiddenOnAndroid(): Boolean
 
   @DoNotStrip @JvmStatic public external fun useTurboModuleInterop(): Boolean
+
+  @DoNotStrip @JvmStatic public external fun useWindowDensityForDisplayMetricsAndroid(): Boolean
 
   @DoNotStrip @JvmStatic public external fun viewCullingOutsetRatio(): Double
 

@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<256b97731c59551616a8e0cbc777f3fa>>
+ * @generated SignedSource<<da45e41e9a58711ee3b68a38965938fb>>
  */
 
 /**
@@ -31,7 +31,11 @@ public interface ReactNativeFeatureFlagsProvider {
 
   @DoNotStrip public fun defaultTextToOverflowHidden(): Boolean
 
+  @DoNotStrip public fun deferTextInputTruncationIOS(): Boolean
+
   @DoNotStrip public fun disableEarlyViewCommandExecution(): Boolean
+
+  @DoNotStrip public fun disableIdleEventDispatchFrameCallbackRearmAndroid(): Boolean
 
   @DoNotStrip public fun disableIdleMountItemFrameCallbackRearmAndroid(): Boolean
 
@@ -77,7 +81,7 @@ public interface ReactNativeFeatureFlagsProvider {
 
   @DoNotStrip public fun enableFlexboxAutoMinSizeInStrictMode(): Boolean
 
-  @DoNotStrip public fun enableFontScaleChangesUpdatingLayout(): Boolean
+  @DoNotStrip public fun enableFollowUpMountItemDispatchAndroid(): Boolean
 
   @DoNotStrip public fun enableIOSCompressedTextFrameAdjustment(): Boolean
 
@@ -141,6 +145,8 @@ public interface ReactNativeFeatureFlagsProvider {
 
   @DoNotStrip public fun fixMappingOfEventPrioritiesBetweenFabricAndReact(): Boolean
 
+  @DoNotStrip public fun fixTextLayoutOnPixelDensityChange(): Boolean
+
   @DoNotStrip public fun fixYogaFlexBasisFitContentInMainAxis(): Boolean
 
   @DoNotStrip public fun fuseboxAssertSingleHostState(): Boolean
@@ -152,6 +158,8 @@ public interface ReactNativeFeatureFlagsProvider {
   @DoNotStrip public fun fuseboxScreenshotCaptureEnabled(): Boolean
 
   @DoNotStrip public fun fuseboxWebSocketEventsEnabled(): Boolean
+
+  @DoNotStrip public fun keepTimersRunningWhileHostPausedAndroid(): Boolean
 
   @DoNotStrip public fun optimizedAnimatedPropUpdates(): Boolean
 
@@ -175,6 +183,8 @@ public interface ReactNativeFeatureFlagsProvider {
 
   @DoNotStrip public fun skipActivityIdentityAssertionOnHostPause(): Boolean
 
+  @DoNotStrip public fun skipUnchangedChildrenInDifferentiator(): Boolean
+
   @DoNotStrip public fun syncAndroidClipBoundsWithOverflow(): Boolean
 
   @DoNotStrip public fun traceTurboModulePromiseRejectionsOnAndroid(): Boolean
@@ -196,6 +206,8 @@ public interface ReactNativeFeatureFlagsProvider {
   @DoNotStrip public fun useTraitHiddenOnAndroid(): Boolean
 
   @DoNotStrip public fun useTurboModuleInterop(): Boolean
+
+  @DoNotStrip public fun useWindowDensityForDisplayMetricsAndroid(): Boolean
 
   @DoNotStrip public fun viewCullingOutsetRatio(): Double
 
